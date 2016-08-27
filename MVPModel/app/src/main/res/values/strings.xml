@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">MVPModel</string>
+    
+    <string-array name="city_names">
+        <item>北京</item>
+        <item>上海</item>
+        <item>深圳</item>
+        <item>广州</item>
+        <item>济南</item>
+        <item>青岛</item>
+        <item>临沂</item>
+    </string-array>
+</resources>
