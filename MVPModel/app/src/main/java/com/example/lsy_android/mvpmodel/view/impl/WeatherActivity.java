@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.example.lsy_android.mvpmodel.R;
 import com.example.lsy_android.mvpmodel.adapter.ListItemAdapter;
-import com.example.lsy_android.mvpmodel.model.WeatherPresenter;
+import com.example.lsy_android.mvpmodel.presenter.WeatherPresenter;
 import com.example.lsy_android.mvpmodel.model.entity.Weather;
 import com.example.lsy_android.mvpmodel.model.entity.WeatherInfo;
 import com.example.lsy_android.mvpmodel.model.entity.WeatherInfoForecast;

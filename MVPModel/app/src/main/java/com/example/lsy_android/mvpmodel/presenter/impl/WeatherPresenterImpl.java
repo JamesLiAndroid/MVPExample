@@ -6,9 +6,9 @@ import android.os.Message;
 
 import com.example.lsy_android.mvpmodel.model.OnWeatherListener;
 import com.example.lsy_android.mvpmodel.model.WeatherModel;
-import com.example.lsy_android.mvpmodel.model.WeatherPresenter;
 import com.example.lsy_android.mvpmodel.model.entity.Weather;
 import com.example.lsy_android.mvpmodel.model.impl.WeatherModelImpl;
+import com.example.lsy_android.mvpmodel.presenter.WeatherPresenter;
 
 /**
  * Created by lsy-android on 8/27/16 in zsl-tech.

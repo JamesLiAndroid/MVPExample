@@ -1,4 +1,4 @@
-package com.example.lsy_android.mvpmodel.model;
+package com.example.lsy_android.mvpmodel.presenter;
 
 /**
  *
