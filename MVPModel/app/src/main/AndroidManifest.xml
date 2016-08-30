@@ -15,7 +15,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.CitySelectActivity"></activity>
+        <activity android:name=".view.impl.CitySelectActivity"></activity>
     </application>
 
 </manifest>

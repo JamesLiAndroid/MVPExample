@@ -31,7 +31,7 @@
                 android:id="@+id/btn_back"
                 android:layout_width="19dp"
                 android:layout_height="19dp"
-                android:background="@drawable/btn_guanbi" />
+                android:background="@drawable/btn_close" />
         </LinearLayout>
     </RelativeLayout>
 
@@ -87,7 +87,7 @@
         android:textSize="16dp"
         android:visibility="gone" />
 
-    <com.example.lsy_android.mvpmodel.views.MyLetterListView
+    <com.example.lsy_android.mvpmodel.self_views.MyLetterListView
         android:id="@+id/MyLetterListView01"
         android:layout_width="25dip"
         android:layout_height="fill_parent"

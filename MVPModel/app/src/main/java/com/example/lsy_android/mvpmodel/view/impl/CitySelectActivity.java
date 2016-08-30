@@ -1,4 +1,4 @@
-package com.example.lsy_android.mvpmodel.activity;
+package com.example.lsy_android.mvpmodel.view.impl;
 
 import android.content.Context;
 import android.content.Intent;
@@ -31,7 +31,8 @@ import com.example.lsy_android.mvpmodel.model.entity.City;
 import com.example.lsy_android.mvpmodel.utils.DBHelper;
 import com.example.lsy_android.mvpmodel.utils.DatabaseHelper;
 import com.example.lsy_android.mvpmodel.utils.PingYinUtils;
-import com.example.lsy_android.mvpmodel.views.MyLetterListView;
+import com.example.lsy_android.mvpmodel.self_views.MyLetterListView;
+import com.example.lsy_android.mvpmodel.view.CitySelectView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,7 +42,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class CitySelectActivity extends AppCompatActivity implements AbsListView.OnScrollListener, View.OnClickListener {
+/**
+ *
+ */
+public class CitySelectActivity extends AppCompatActivity implements AbsListView.OnScrollListener, View.OnClickListener, CitySelectView {
 
     private BaseAdapter adapter;
     private ResultListAdapter resultListAdapter;
@@ -61,6 +65,7 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
     private EditText sh;
     private TextView tv_noresult;
 
+    // TODO：需要集成百度地图功能才可以实现定位城市
     // private MyLocationListener mMyLocationListener;
 
     private String currentCity; // 用于保存定位到的城市
@@ -76,12 +81,9 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
         setContentView(R.layout.activity_city_select);
 
         initView();
-        initData();
     }
 
     protected void initView() {
-        //setContentView(R.layout.main);
-
         TextView back = (TextView) findViewById(R.id.btn_back);
         back.setOnClickListener(this);
         personList = (ListView) findViewById(R.id.list_view);
@@ -168,10 +170,6 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
         // -----------定位
        // lm = new LocationManager(this);
         //lm.registerLocationListener(locationListener, false);
-    }
-
-    protected void initData() {
-
     }
 
     @Override
@@ -318,6 +316,26 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
     }
 
     private LocationManager lm;
+
+    @Override
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void dismissLoading() {
+
+    }
+
+    @Override
+    public void showCitiesError() {
+
+    }
+
+    @Override
+    public void setCitiesInfo(List<City> cities) {
+
+    }
    /* *//**
      * 实现实位回调监听
      *//*
