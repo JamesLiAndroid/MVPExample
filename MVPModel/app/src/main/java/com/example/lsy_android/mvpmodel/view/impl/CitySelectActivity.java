@@ -341,7 +341,10 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
 
     @Override
     public void setCitiesInfo(List<City> cities) {
-
+        cityInit();
+        hotCityInit();
+        hisCityInit();
+        setAdapter(allCity_lists, city_hot, city_history);
     }
    /* *//**
      * 实现实位回调监听
@@ -578,7 +581,7 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
 
     private boolean mReady;
 
-    // 初始化汉语拼音首字母弹出提示框
+    // 汉语拼音首字母弹出提示框, 注意windowLeak的问题
     private void initOverlay() {
         mReady = true;
         LayoutInflater inflater = LayoutInflater.from(this);
