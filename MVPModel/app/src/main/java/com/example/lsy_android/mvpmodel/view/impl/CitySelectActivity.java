@@ -195,6 +195,8 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
     public void hotCityInit() {
         City city = new City("济南", "2");
         city_hot.add(city);
+        city = new City("北京", "2");
+        city_hot.add(city);
         city = new City("大连", "2");
         city_hot.add(city);
         city = new City("上海", "2");
@@ -203,15 +205,11 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
         city_hot.add(city);
         city = new City("淄博", "2");
         city_hot.add(city);
-        city = new City("菏泽", "2");
+        city = new City("临沂", "2");
         city_hot.add(city);
         city = new City("大庆", "2");
         city_hot.add(city);
-        city = new City("喀什", "2");
-        city_hot.add(city);
         city = new City("青岛", "2");
-        city_hot.add(city);
-        city = new City("北京", "2");
         city_hot.add(city);
         city = new City("重庆", "2");
         city_hot.add(city);
@@ -306,7 +304,8 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
 
         ViewHolder holder;
 
-        private String[] selfSections;// 存放存在的汉语拼音首字母
+        private String[] selfSections; // 存放存在的汉语拼音首字母
+        private HashMap<String, Integer> alphaIndexerNext = new HashMap<>();
 
         public ListAdapter(Context context, List<City> list, List<City> hotList, List<String> hisCity) {
             this.inflater = LayoutInflater.from(context);
@@ -321,11 +320,20 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
                 // 上一个汉语拼音首字母，如果不存在为" "
                 String previewStr = (i - 1) >= 0 ? PingYinUtils.getAlpha(list.get(i - 1).getPinyi()) : " ";
                 if (!previewStr.equals(currentStr)) {
-                    String name = PingYinUtils.getAlpha(list.get(i).getPinyi());
-                    alphaIndexer.put(name, i);
-                    selfSections[i] = name;
+                    String firstLetter = PingYinUtils.getAlpha(list.get(i).getPinyi());
+                    alphaIndexerNext.put(firstLetter, i);
+                    selfSections[i] = firstLetter;
                 }
             }
+        }
+
+        public String[] getSelfSections() {
+            return selfSections;
+        }
+
+
+        public HashMap<String, Integer> getAlphaIndexerNext() {
+            return alphaIndexerNext;
         }
 
         @Override
