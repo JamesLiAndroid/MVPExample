@@ -1,4 +1,4 @@
-package com.example.lsy_android.mvpmodel.utils;
+package com.example.lsy_android.mvpmodel.city.utils;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

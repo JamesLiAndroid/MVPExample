@@ -17,7 +17,7 @@ public class CityModelImpl implements CityModel{
         SimpleCity city = null;
         for (int i = 0; i < 15; i++) {
             city = new SimpleCity();
-            city.setCity("城市。。。。"+i);
+            city.setCityName("城市。。。。"+i);
             cities.add(city);
         }
         return cities;
@@ -30,7 +30,7 @@ public class CityModelImpl implements CityModel{
         SimpleCity city = null;
         for (int i = 0; i < 15; i++) {
             city = new SimpleCity();
-            city.setCity("城市:"+name+":第。。。。"+i+"个");
+            city.setCityName("城市:"+name+":第。。。。"+i+"个");
             cities.add(city);
         }
         return cities;

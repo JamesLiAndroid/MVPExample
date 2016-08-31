@@ -86,7 +86,7 @@
         android:textSize="16dp"
         android:visibility="gone" />
 
-    <com.example.lsy_android.mvpmodel.self_views.MyLetterListView
+    <com.example.lsy_android.mvpmodel.city.views.MyLetterListView
         android:id="@+id/my_letter_list"
         android:layout_width="25dip"
         android:layout_height="fill_parent"

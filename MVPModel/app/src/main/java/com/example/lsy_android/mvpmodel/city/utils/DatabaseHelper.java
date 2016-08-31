@@ -1,10 +1,11 @@
-package com.example.lsy_android.mvpmodel.utils;
+package com.example.lsy_android.mvpmodel.city.utils;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 /**
+ * 最近访问城市的数据库列表
  * Created by jyj-lsy on 8/30/16 in zsl-tech.
  */
 public class DatabaseHelper extends SQLiteOpenHelper {

@@ -2,15 +2,12 @@ package com.example.lsy_android.mvpmodel.view.impl;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,17 +26,13 @@ import com.example.lsy_android.mvpmodel.R;
 import com.example.lsy_android.mvpmodel.adapter.HotCityAdapter;
 import com.example.lsy_android.mvpmodel.adapter.RecentCityAdapter;
 import com.example.lsy_android.mvpmodel.adapter.ResultListAdapter;
+import com.example.lsy_android.mvpmodel.city.utils.DBUtils;
+import com.example.lsy_android.mvpmodel.city.utils.PingYinUtils;
+import com.example.lsy_android.mvpmodel.city.views.MyLetterListView;
 import com.example.lsy_android.mvpmodel.model.entity.City;
-import com.example.lsy_android.mvpmodel.self_views.MyLetterListView;
-import com.example.lsy_android.mvpmodel.utils.DBHelper;
-import com.example.lsy_android.mvpmodel.utils.DatabaseHelper;
-import com.example.lsy_android.mvpmodel.utils.PingYinUtils;
 import com.example.lsy_android.mvpmodel.view.CitySelectView;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -73,7 +66,7 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
     private boolean isNeedFresh;
 
     // TODO:使用GreenDao来替换
-    private DatabaseHelper helper;
+    //private DatabaseHelper helper;
 
     WindowManager windowManager;
 
@@ -96,7 +89,6 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
         resultList = (ListView) findViewById(R.id.search_result);
         sh = (EditText) findViewById(R.id.sh);
         tv_noresult = (TextView) findViewById(R.id.tv_noresult);
-        helper = new DatabaseHelper(this);
         sh.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -109,7 +101,7 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
                     city_result.clear();
                     letterListView.setVisibility(View.GONE);
                     personList.setVisibility(View.GONE);
-                    getResultCityList(s.toString());
+                    city_result = DBUtils.getInstance().getResultCityList(CitySelectActivity.this, s.toString());
                     if (city_result.size() <= 0) {
                         tv_noresult.setVisibility(View.VISIBLE);
                         resultList.setVisibility(View.GONE);
@@ -167,7 +159,7 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
         initOverlay();
         cityInit();
         hotCityInit();
-        hisCityInit();
+        city_history = DBUtils.getInstance().hisCityInit(CitySelectActivity.this);
         setAdapter(allCity_lists, city_hot, city_history);
         // -----------定位
        // lm = new LocationManager(this);
@@ -184,16 +176,6 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
         super.onDestroy();
     }
 
-    public void InsertCity(String name) {
-        SQLiteDatabase db = helper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("select * from recentcity where name = '" + name + "'", null);
-        if (cursor.getCount() > 0) { //
-            db.delete("recentcity", "name = ?", new String[] { name });
-        }
-        db.execSQL("insert into recentcity(name, date) values('" + name + "', " + System.currentTimeMillis() + ")");
-        db.close();
-    }
-
     private void cityInit() {
         City city = new City("定位", "0"); // 当前定位城市
         allCity_lists.add(city);
@@ -203,7 +185,7 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
         allCity_lists.add(city);
         city = new City("全部", "3"); // 全部城市
         allCity_lists.add(city);
-        city_lists = getCityList();
+        city_lists = DBUtils.getInstance().getCityList(CitySelectActivity.this);
         allCity_lists.addAll(city_lists);
     }
 
@@ -235,85 +217,6 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
         city_hot.add(city);
     }
 
-    /**
-     *
-     * @Title: hisCityInit
-     * @Description: 最近访问的城市 @param 设定文件 @return void
-     *         返回类型 @throws
-     */
-    private void hisCityInit() {
-        SQLiteDatabase db = helper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("select * from recentcity order by date desc limit 0, 3", null);
-        while (cursor.moveToNext()) {
-            city_history.add(cursor.getString(1));
-        }
-        cursor.close();
-        db.close();
-    }
-
-    @SuppressWarnings("unchecked")
-    private ArrayList<City> getCityList() {
-        DBHelper dbHelper = new DBHelper(this);
-        ArrayList<City> list = new ArrayList<City>();
-        try {
-            dbHelper.createDataBase();
-            SQLiteDatabase db = dbHelper.getWritableDatabase();
-            Cursor cursor = db.rawQuery("select * from city", null);
-            City city;
-            while (cursor.moveToNext()) {
-                city = new City(cursor.getString(1), cursor.getString(2));
-                list.add(city);
-            }
-            cursor.close();
-            db.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Collections.sort(list, comparator);
-        return list;
-    }
-
-    @SuppressWarnings("unchecked")
-    private void getResultCityList(String keyword) {
-        DBHelper dbHelper = new DBHelper(this);
-        try {
-            dbHelper.createDataBase();
-            SQLiteDatabase db = dbHelper.getWritableDatabase();
-            Cursor cursor = db.rawQuery(
-                    "select * from city where name like \"%" + keyword + "%\" or pinyin like \"%" + keyword + "%\"",
-                    null);
-            City city;
-            Log.e("info", "length = " + cursor.getCount());
-            while (cursor.moveToNext()) {
-                city = new City(cursor.getString(1), cursor.getString(2));
-                city_result.add(city);
-            }
-            cursor.close();
-            db.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Collections.sort(city_result, comparator);
-    }
-
-    /**
-     * a-z排序
-     */
-    @SuppressWarnings("rawtypes")
-    Comparator comparator = new Comparator<City>() {
-        @Override
-        public int compare(City lhs, City rhs) {
-            String a = lhs.getPinyi().substring(0, 1);
-            String b = rhs.getPinyi().substring(0, 1);
-            int flag = a.compareTo(b);
-            if (flag == 0) {
-                return a.compareTo(b);
-            } else {
-                return flag;
-            }
-        }
-    };
-
     private void setAdapter(List<City> list, List<City> hotList, List<String> hisCity) {
         adapter = new ListAdapter(this, list, hotList, hisCity);
         personList.setAdapter(adapter);
@@ -343,7 +246,7 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
     public void setCitiesInfo(List<City> cities) {
         cityInit();
         hotCityInit();
-        hisCityInit();
+        city_history = DBUtils.getInstance().hisCityInit(CitySelectActivity.this);
         setAdapter(allCity_lists, city_hot, city_history);
     }
    /* *//**
@@ -568,7 +471,7 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
     private void resultCity(String city) {
         Intent in = new Intent();
         in.putExtra("result", city);
-        InsertCity(city);
+        DBUtils.getInstance().insertCity(CitySelectActivity.this, city);
         setResult(RESULT_OK, in);
 
         finish();

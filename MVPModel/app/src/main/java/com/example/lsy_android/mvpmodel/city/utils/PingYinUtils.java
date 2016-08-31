@@ -1,4 +1,4 @@
-package com.example.lsy_android.mvpmodel.utils;
+package com.example.lsy_android.mvpmodel.city.utils;
 
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;

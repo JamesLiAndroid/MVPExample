@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 import com.example.lsy_android.mvpmodel.R;
 import com.example.lsy_android.mvpmodel.adapter.ListItemAdapter;
-import com.example.lsy_android.mvpmodel.city.view.CityActivity;
 import com.example.lsy_android.mvpmodel.model.entity.Weather;
 import com.example.lsy_android.mvpmodel.model.entity.WeatherInfo;
 import com.example.lsy_android.mvpmodel.model.entity.WeatherInfoForecast;
@@ -130,7 +129,7 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
                 break;
             case  R.id.btn_choose_city:
                 // 进入选择城市的页面
-                Intent intent = new Intent(WeatherActivity.this, CityActivity.class);
+                Intent intent = new Intent(WeatherActivity.this, CitySelectActivity.class);
                 startActivityForResult(intent, CHOOSE_CITY);
                 break;
         }

@@ -51,7 +51,7 @@ public class CityAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.tvItemCity.setText(cities.get(position).getCity());
+        holder.tvItemCity.setText(cities.get(position).getCityName());
         return convertView;
     }
 

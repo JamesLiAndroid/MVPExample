@@ -1,4 +1,4 @@
-package com.example.lsy_android.mvpmodel.self_views;
+package com.example.lsy_android.mvpmodel.city.views;
 
 import android.content.Context;
 import android.graphics.Canvas;
