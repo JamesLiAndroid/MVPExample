@@ -7,5 +7,12 @@ public interface CityPresenter {
     /**
      * 获取城市列表
      */
-    void getCityList();
+    void getAllCityList();
+
+    /**
+     * 查询城市时获取的城市列表
+     * 可能有多个
+     * @param name 查询的城市名称
+     */
+    void getSearchCityList(String name);
 }

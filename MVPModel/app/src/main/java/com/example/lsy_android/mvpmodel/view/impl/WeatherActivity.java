@@ -1,5 +1,6 @@
 package com.example.lsy_android.mvpmodel.view.impl;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,10 +16,10 @@ import android.widget.Toast;
 
 import com.example.lsy_android.mvpmodel.R;
 import com.example.lsy_android.mvpmodel.adapter.ListItemAdapter;
-import com.example.lsy_android.mvpmodel.presenter.WeatherPresenter;
 import com.example.lsy_android.mvpmodel.model.entity.Weather;
 import com.example.lsy_android.mvpmodel.model.entity.WeatherInfo;
 import com.example.lsy_android.mvpmodel.model.entity.WeatherInfoForecast;
+import com.example.lsy_android.mvpmodel.presenter.WeatherPresenter;
 import com.example.lsy_android.mvpmodel.presenter.impl.WeatherPresenterImpl;
 import com.example.lsy_android.mvpmodel.view.WeatherView;
 
@@ -27,10 +28,13 @@ import java.util.List;
 
 public class WeatherActivity extends AppCompatActivity implements WeatherView, View.OnClickListener {
 
+    public static final int CHOOSE_CITY = 0x123;
+
     private WeatherPresenter presenter;
 
     private AutoCompleteTextView actCityName;
     private Button btnSubmit;
+    private Button btnChooseCity;
     private ProgressBar progressBar;
     private ListView listView;
 
@@ -39,6 +43,7 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
     private String[] values = new String[9];
 
     private Handler handler = new UIHandler(WeatherActivity.this);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +51,6 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
 
         bindView();
         presenter = new WeatherPresenterImpl(handler, this);
-
     }
 
     /**
@@ -55,12 +59,14 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
     private void bindView() {
         actCityName = (AutoCompleteTextView) findViewById(R.id.atv_city_name);
         btnSubmit = (Button) findViewById(R.id.btn_submit);
+        btnChooseCity = (Button) findViewById(R.id.btn_choose_city);
         listView = (ListView) findViewById(R.id.listView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         //初始化为不可见
         progressBar.setVisibility(View.INVISIBLE);
         //设置按钮监听
         btnSubmit.setOnClickListener(this);
+        btnChooseCity.setOnClickListener(this);
         //设置自动填充文本框内容
         String[] citys = getResources().getStringArray(R.array.city_names);
         ArrayAdapter cityNamesAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, citys);
@@ -121,9 +127,22 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
                     Toast.makeText(this, "城市名称不能为空", Toast.LENGTH_SHORT).show();
                 }
                 break;
+            case  R.id.btn_choose_city:
+                // 进入选择城市的页面
+                Intent intent = new Intent(WeatherActivity.this, CitySelectActivity.class);
+                startActivityForResult(intent, CHOOSE_CITY);
+                break;
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CHOOSE_CITY && resultCode == RESULT_OK) {
+            Toast.makeText(WeatherActivity.this, "选择返回的城市为: " + data.getStringExtra("result"),
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
 
     /**
      * Handler自定义

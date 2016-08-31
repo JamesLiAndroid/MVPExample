@@ -14,7 +14,7 @@
         android:textColor="#000000"
         android:textSize="16dp" />
 
-    <com.bjtz.app.view.MyGridView
+    <com.example.lsy_android.mvpmodel.self_views.MyGridView
         android:id="@+id/recent_city"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

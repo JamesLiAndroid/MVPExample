@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.PixelFormat;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -27,11 +26,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.lsy_android.mvpmodel.R;
+import com.example.lsy_android.mvpmodel.adapter.HotCityAdapter;
+import com.example.lsy_android.mvpmodel.adapter.RecentCityAdapter;
+import com.example.lsy_android.mvpmodel.adapter.ResultListAdapter;
 import com.example.lsy_android.mvpmodel.model.entity.City;
+import com.example.lsy_android.mvpmodel.self_views.MyLetterListView;
 import com.example.lsy_android.mvpmodel.utils.DBHelper;
 import com.example.lsy_android.mvpmodel.utils.DatabaseHelper;
 import com.example.lsy_android.mvpmodel.utils.PingYinUtils;
-import com.example.lsy_android.mvpmodel.self_views.MyLetterListView;
 import com.example.lsy_android.mvpmodel.view.CitySelectView;
 
 import java.io.IOException;
@@ -40,7 +42,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  *
@@ -54,13 +55,12 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
     private TextView overlay; // 对话框首字母textview
     private MyLetterListView letterListView; // A-Z listview
     private HashMap<String, Integer> alphaIndexer;// 存放存在的汉语拼音首字母和与之对应的列表位置
-    private String[] sections;// 存放存在的汉语拼音首字母
     private Handler handler;
     private OverlayThread overlayThread; // 显示首字母对话框
     private ArrayList<City> allCity_lists; // 所有城市列表
-    private ArrayList<City> city_lists;// 城市列表
-    private ArrayList<City> city_hot;
-    private ArrayList<City> city_result;
+    private ArrayList<City> city_lists; // 城市列表
+    private ArrayList<City> city_hot; // 热门城市列表
+    private ArrayList<City> city_result; // 搜索获取的城市列表
     private ArrayList<String> city_history;
     private EditText sh;
     private TextView tv_noresult;
@@ -74,6 +74,8 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
 
     // TODO:使用GreenDao来替换
     private DatabaseHelper helper;
+
+    WindowManager windowManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,7 +130,7 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
 
             }
         });
-        letterListView = (MyLetterListView) findViewById(R.id.MyLetterListView01);
+        letterListView = (MyLetterListView) findViewById(R.id.my_letter_list);
         letterListView.setOnTouchingLetterChangedListener(new LetterListViewListener());
         alphaIndexer = new HashMap<String, Integer>();
         handler = new Handler();
@@ -178,6 +180,7 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
 
             lm.unRegisterLocationListener(locationListener);
         }*/
+        windowManager.removeView(overlay);
         super.onDestroy();
     }
 
@@ -234,7 +237,8 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
 
     /**
      *
-     * @Title: hisCityInit @Description: 最近访问的城市 @param 设定文件 @return void
+     * @Title: hisCityInit
+     * @Description: 最近访问的城市 @param 设定文件 @return void
      *         返回类型 @throws
      */
     private void hisCityInit() {
@@ -315,7 +319,7 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
         personList.setAdapter(adapter);
     }
 
-    private LocationManager lm;
+   // private LocationManager lm;
 
     @Override
     public void showLoading() {
@@ -329,7 +333,10 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
 
     @Override
     public void showCitiesError() {
-
+        Toast.makeText(CitySelectActivity.this, "读取城市信息失败！", Toast.LENGTH_SHORT).show();
+        tv_noresult.setVisibility(View.VISIBLE);
+        resultList.setVisibility(View.GONE);
+        personList.setVisibility(View.GONE);
     }
 
     @Override
@@ -383,50 +390,6 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
 
     }*/
 
-    private class ResultListAdapter extends BaseAdapter {
-        private LayoutInflater inflater;
-        private ArrayList<City> results = new ArrayList<City>();
-
-        public ResultListAdapter(Context context, ArrayList<City> results) {
-            inflater = LayoutInflater.from(context);
-            this.results = results;
-        }
-
-        @Override
-        public int getCount() {
-            return results.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return position;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder viewHolder = null;
-            if (convertView == null) {
-                convertView = inflater.inflate(R.layout.list_item, null);
-                viewHolder = new ViewHolder();
-                viewHolder.name = (TextView) convertView.findViewById(R.id.name);
-                convertView.setTag(viewHolder);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
-            viewHolder.name.setText(results.get(position).getName());
-            return convertView;
-        }
-
-        class ViewHolder {
-            TextView name;
-        }
-    }
-
     public class ListAdapter extends BaseAdapter {
         private Context context;
         private LayoutInflater inflater;
@@ -435,23 +398,26 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
         private List<String> hisCity;
         final int VIEW_TYPE = 5;
 
+        ViewHolder holder;
+
+        private String[] selfSections;// 存放存在的汉语拼音首字母
+
         public ListAdapter(Context context, List<City> list, List<City> hotList, List<String> hisCity) {
             this.inflater = LayoutInflater.from(context);
             this.list = list;
             this.context = context;
             this.hotList = hotList;
             this.hisCity = hisCity;
-            alphaIndexer = new HashMap<String, Integer>();
-            sections = new String[list.size()];
+            selfSections = new String[list.size()];
             for (int i = 0; i < list.size(); i++) {
                 // 当前汉语拼音首字母
-                String currentStr = getAlpha(list.get(i).getPinyi());
+                String currentStr = PingYinUtils.getAlpha(list.get(i).getPinyi());
                 // 上一个汉语拼音首字母，如果不存在为" "
-                String previewStr = (i - 1) >= 0 ? getAlpha(list.get(i - 1).getPinyi()) : " ";
+                String previewStr = (i - 1) >= 0 ? PingYinUtils.getAlpha(list.get(i - 1).getPinyi()) : " ";
                 if (!previewStr.equals(currentStr)) {
-                    String name = getAlpha(list.get(i).getPinyi());
+                    String name = PingYinUtils.getAlpha(list.get(i).getPinyi());
                     alphaIndexer.put(name, i);
-                    sections[i] = name;
+                    selfSections[i] = name;
                 }
             }
         }
@@ -481,7 +447,6 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
             return position;
         }
 
-        ViewHolder holder;
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
@@ -532,7 +497,7 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
             } else if (viewType == 1) { // 最近访问城市
                 convertView = inflater.inflate(R.layout.recent_city, null);
                 GridView rencentCity = (GridView) convertView.findViewById(R.id.recent_city);
-                rencentCity.setAdapter(new HitCityAdapter(context, this.hisCity));
+                rencentCity.setAdapter(new RecentCityAdapter(context, this.hisCity));
                 rencentCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                     @Override
@@ -574,8 +539,8 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
                 }
                 if (position >= 1) {
                     holder.name.setText(list.get(position).getName());
-                    String currentStr = getAlpha(list.get(position).getPinyi());
-                    String previewStr = (position - 1) >= 0 ? getAlpha(list.get(position - 1).getPinyi()) : " ";
+                    String currentStr = PingYinUtils.getAlpha(list.get(position).getPinyi());
+                    String previewStr = (position - 1) >= 0 ? PingYinUtils.getAlpha(list.get(position - 1).getPinyi()) : " ";
                     if (!previewStr.equals(currentStr)) {
                         holder.alpha.setVisibility(View.VISIBLE);
                         holder.alpha.setText(currentStr);
@@ -593,6 +558,10 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
         }
     }
 
+    /**
+     * 返回选中的城市信息
+     * @param city
+     */
     private void resultCity(String city) {
         Intent in = new Intent();
         in.putExtra("result", city);
@@ -607,76 +576,6 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
         super.onStop();
     }
 
-    class HotCityAdapter extends BaseAdapter {
-        private Context context;
-        private LayoutInflater inflater;
-        private List<City> hotCitys;
-
-        public HotCityAdapter(Context context, List<City> hotCitys) {
-            this.context = context;
-            inflater = LayoutInflater.from(this.context);
-            this.hotCitys = hotCitys;
-        }
-
-        @Override
-        public int getCount() {
-            return hotCitys.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return position;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            convertView = inflater.inflate(R.layout.item_city, null);
-            TextView city = (TextView) convertView.findViewById(R.id.city);
-            city.setText(hotCitys.get(position).getName());
-            return convertView;
-        }
-    }
-
-    class HitCityAdapter extends BaseAdapter {
-        private Context context;
-        private LayoutInflater inflater;
-        private List<String> hotCitys;
-
-        public HitCityAdapter(Context context, List<String> hotCitys) {
-            this.context = context;
-            inflater = LayoutInflater.from(this.context);
-            this.hotCitys = hotCitys;
-        }
-
-        @Override
-        public int getCount() {
-            return hotCitys.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return position;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            convertView = inflater.inflate(R.layout.item_city, null);
-            TextView city = (TextView) convertView.findViewById(R.id.city);
-            city.setText(hotCitys.get(position));
-            return convertView;
-        }
-    }
-
     private boolean mReady;
 
     // 初始化汉语拼音首字母弹出提示框
@@ -689,7 +588,7 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
                 ViewGroup.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.TYPE_APPLICATION,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 PixelFormat.TRANSLUCENT);
-        WindowManager windowManager = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
+        windowManager = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
         windowManager.addView(overlay, lp);
     }
 
@@ -712,37 +611,13 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
         }
     }
 
-    // 设置overlay不可见
+    /**
+     * 设置overlay不可见，为Runnable，配合Handler进行隐藏
+      */
     private class OverlayThread implements Runnable {
         @Override
         public void run() {
             overlay.setVisibility(View.GONE);
-        }
-    }
-
-    // 获得汉语拼音首字母
-    private String getAlpha(String str) {
-        if (str == null) {
-            return "#";
-        }
-        if (str.trim().length() == 0) {
-            return "#";
-        }
-        char c = str.trim().substring(0, 1).charAt(0);
-        // 正则表达式，判断首字母是否是英文字母
-        Pattern pattern = Pattern.compile("^[A-Za-z]+$");
-        if (pattern.matcher(c + "").matches()) {
-            return (c + "").toUpperCase();
-        } else if (str.equals("0")) {
-            return "定位";
-        } else if (str.equals("1")) {
-            return "最近";
-        } else if (str.equals("2")) {
-            return "热门";
-        } else if (str.equals("3")) {
-            return "全部";
-        } else {
-            return "#";
         }
     }
 
@@ -766,7 +641,6 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
             if (firstVisibleItem < 4) {
                 text = name;
             } else {
-                // TODO:导入包
                 text = PingYinUtils.converterToFirstSpell(pinyin).substring(0, 1).toUpperCase();
             }
             overlay.setText(text);
@@ -783,7 +657,6 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
             case R.id.btn_back:
                 CitySelectActivity.this.finish();
                 break;
-
             default:
                 break;
         }

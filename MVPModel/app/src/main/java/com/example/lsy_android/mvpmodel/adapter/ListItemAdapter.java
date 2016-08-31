@@ -17,6 +17,8 @@ public class ListItemAdapter extends BaseAdapter {
     private String[] titles;
     private Context context;
 
+    ViewHolder holder;
+
     public ListItemAdapter(Context context, String[] values) {
         this.context = context;
         this.values = values;
@@ -42,10 +44,9 @@ public class ListItemAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        ViewHolder holder = null;
-        if (holder == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.item_layout, null);
+        if (view == null) {
             holder = new ViewHolder();
+            view = LayoutInflater.from(context).inflate(R.layout.item_layout, null);
             holder.title = (TextView) view.findViewById(R.id.title);
             holder.value = (TextView) view.findViewById(R.id.value);
             view.setTag(holder);
