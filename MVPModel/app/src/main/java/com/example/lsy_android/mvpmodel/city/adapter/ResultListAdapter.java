@@ -24,6 +24,15 @@ public class ResultListAdapter extends BaseAdapter {
         this.results = results;
     }
 
+    /**
+     * 添加所有搜索的城市信息
+     * @param result
+     */
+    public void addAll(ArrayList<City> result) {
+        this.results = result;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
         return results.size();

@@ -253,6 +253,7 @@ public class CitySelectActivityCopy extends AppCompatActivity
     @Override
     public void setSearchedCityList(ArrayList<City> searchedCityList) {
         this.city_result = searchedCityList;
+        resultListAdapter.notifyDataSetChanged();
         letterListView.setVisibility(View.GONE);
         personList.setVisibility(View.GONE);
         if (city_result.size() <= 0) {
@@ -261,9 +262,7 @@ public class CitySelectActivityCopy extends AppCompatActivity
         } else {
             tv_noresult.setVisibility(View.GONE);
             resultList.setVisibility(View.VISIBLE);
-            resultListAdapter = new ResultListAdapter(this, city_result);
-            resultList.setAdapter(resultListAdapter);
-            //resultListAdapter.notifyDataSetChanged();
+            resultListAdapter.addAll(city_result);
         }
     }
 
