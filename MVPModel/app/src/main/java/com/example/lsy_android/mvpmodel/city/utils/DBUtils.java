@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.example.lsy_android.mvpmodel.model.entity.City;
+import com.example.lsy_android.mvpmodel.city.bean.City;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -57,17 +57,18 @@ public class DBUtils {
     /**
      * 获取城市查询的结果，并排序
      * @param context
-     * @param keyword
+     * @param cityName
      */
     @SuppressWarnings("unchecked")
-    public ArrayList<City> getResultCityList(Context context, String keyword) {
+    public ArrayList<City> getResultCityList(Context context, String cityName) {
         ArrayList<City> cityList = new ArrayList<>();
         DBHelper dbHelper = new DBHelper(context);
         try {
             dbHelper.createDataBase();
             SQLiteDatabase db = dbHelper.getWritableDatabase();
             Cursor cursor = db.rawQuery(
-                    "select * from city where name like \"%" + keyword + "%\" or pinyin like \"%" + keyword + "%\"",
+                    "select * from city where name like \"%" + cityName
+                            + "%\" or pinyin like \"%" + cityName + "%\"",
                     null);
             City city;
             Log.e("info", "length = " + cursor.getCount());
@@ -131,6 +132,27 @@ public class DBUtils {
         Cursor cursor = db.rawQuery("select * from recentcity order by date desc limit 0, 3", null);
         while (cursor.moveToNext()) {
             recentCityList.add(cursor.getString(1));
+        }
+        cursor.close();
+        db.close();
+        return recentCityList;
+    }
+
+    /**
+     *
+     * @Title: hisCityInit
+     * @Description: 最近访问的城市 @param 设定文件 @return void
+     *         返回类型 @throws
+     */
+    public ArrayList<City> recentCityInit(Context context) {
+        ArrayList<City> recentCityList = new ArrayList<>();
+        DatabaseHelper helper = new DatabaseHelper(context);
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("select * from recentcity order by date desc limit 0, 3", null);
+        City city = null;
+        while (cursor.moveToNext()) {
+            city = new City(cursor.getString(1), PingYinUtils.getPingYin(cursor.getString(1)));
+            recentCityList.add(city);
         }
         cursor.close();
         db.close();

@@ -26,11 +26,13 @@ import com.example.lsy_android.mvpmodel.R;
 import com.example.lsy_android.mvpmodel.city.adapter.HotCityAdapter;
 import com.example.lsy_android.mvpmodel.city.adapter.RecentCityAdapter;
 import com.example.lsy_android.mvpmodel.city.adapter.ResultListAdapter;
+import com.example.lsy_android.mvpmodel.city.bean.City;
+import com.example.lsy_android.mvpmodel.city.presenter.CityPresenterNormal;
+import com.example.lsy_android.mvpmodel.city.presenter.CityPresenterNormalImpl;
 import com.example.lsy_android.mvpmodel.city.utils.DBUtils;
 import com.example.lsy_android.mvpmodel.city.utils.PingYinUtils;
+import com.example.lsy_android.mvpmodel.city.view.CityViewNormal;
 import com.example.lsy_android.mvpmodel.city.views.MyLetterListView;
-import com.example.lsy_android.mvpmodel.model.entity.City;
-import com.example.lsy_android.mvpmodel.view.CitySelectView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,7 +42,9 @@ import java.util.List;
  * 城市选择页面
  */
 public class CitySelectActivity extends AppCompatActivity
-        implements AbsListView.OnScrollListener, View.OnClickListener, CitySelectView {
+        implements AbsListView.OnScrollListener, View.OnClickListener, CityViewNormal {
+
+    private CityPresenterNormal cityPresenter;
 
     private ListAdapter adapter;
     private ResultListAdapter resultListAdapter;
@@ -74,6 +78,8 @@ public class CitySelectActivity extends AppCompatActivity
         setContentView(R.layout.activity_city_select);
 
         initView();
+
+        cityPresenter = new CityPresenterNormalImpl(this);
     }
 
     protected void initView() {
@@ -99,6 +105,7 @@ public class CitySelectActivity extends AppCompatActivity
                     city_result.clear();
                     letterListView.setVisibility(View.GONE);
                     personList.setVisibility(View.GONE);
+                    // cityPresenter.combineSearchedCity(s.toString()); 下面代码等待注释掉
                     city_result = DBUtils.getInstance().getResultCityList(CitySelectActivity.this, s.toString());
                     if (city_result.size() <= 0) {
                         tv_noresult.setVisibility(View.VISIBLE);
@@ -160,7 +167,7 @@ public class CitySelectActivity extends AppCompatActivity
         city_history = DBUtils.getInstance().hisCityInit(CitySelectActivity.this);
         setAdapter(allCity_lists, city_hot, city_history);
         // -----------定位
-       // lm = new LocationManager(this);
+        // lm = new LocationManager(this);
         //lm.registerLocationListener(locationListener, false);
     }
 
@@ -219,34 +226,59 @@ public class CitySelectActivity extends AppCompatActivity
         personList.setAdapter(adapter);
     }
 
-   // private LocationManager lm;
-
     @Override
-    public void showLoading() {
+    public void showProgressBar() {
 
     }
 
     @Override
-    public void dismissLoading() {
+    public void hideProgressBar() {
 
     }
 
     @Override
-    public void showCitiesError() {
-        Toast.makeText(CitySelectActivity.this, "读取城市信息失败！", Toast.LENGTH_SHORT).show();
+    public void setAllCityList(ArrayList<City> allCityList) {
+
+    }
+
+    @Override
+    public void setLocateCity(City city) {
+
+    }
+
+    @Override
+    public void setRecentCityList(ArrayList<City> recentCityList) {
+
+    }
+
+    @Override
+    public void setSearchedCityList(ArrayList<City> searchedCityList) {
+
+    }
+
+    @Override
+    public void setHotCityList(ArrayList<City> hotCityList) {
+        this.city_hot = hotCityList;
+        notifyAll();
+    }
+
+    // private LocationManager lm;
+
+       /* Toast.makeText(CitySelectActivity.this, "读取城市信息失败！", Toast.LENGTH_SHORT).show();
         tv_noresult.setVisibility(View.VISIBLE);
         resultList.setVisibility(View.GONE);
-        personList.setVisibility(View.GONE);
-    }
+        personList.setVisibility(View.GONE);*/
 
-    @Override
+ /*   @Override
     public void setCitiesInfo(List<City> cities) {
         cityInit();
         hotCityInit();
         city_history = DBUtils.getInstance().hisCityInit(CitySelectActivity.this);
         setAdapter(allCity_lists, city_hot, city_history);
-    }
-   /* *//**
+    }*/
+   /* */
+
+    /**
      * 实现实位回调监听
      *//*
     private BDLocationListener locationListener = new BDLocationListener() {
@@ -395,7 +427,7 @@ public class CitySelectActivity extends AppCompatActivity
                             locateProcess = 1;
                             personList.setAdapter(adapter);
                             adapter.notifyDataSetChanged();
-                           // isNeedFresh = true;
+                            // isNeedFresh = true;
                             currentCity = "";
                           /*  lm = new LocationManager(CitySelcet.this);
                             lm.registerLocationListener(locationListener, false);*/
@@ -502,6 +534,7 @@ public class CitySelectActivity extends AppCompatActivity
 
     /**
      * 返回选中的城市信息
+     *
      * @param city
      */
     private void resultCity(String city) {
@@ -555,7 +588,7 @@ public class CitySelectActivity extends AppCompatActivity
 
     /**
      * 设置overlay不可见，为Runnable，配合Handler进行隐藏
-      */
+     */
     private class OverlayThread implements Runnable {
         @Override
         public void run() {

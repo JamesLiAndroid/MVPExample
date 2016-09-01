@@ -1,4 +1,4 @@
-package com.example.lsy_android.mvpmodel.model.entity;
+package com.example.lsy_android.mvpmodel.city.bean;
 
 /**
  * Created by jyj-lsy on 8/30/16 in zsl-tech.

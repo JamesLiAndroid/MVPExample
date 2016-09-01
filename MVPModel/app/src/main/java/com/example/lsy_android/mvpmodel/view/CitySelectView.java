@@ -1,6 +1,6 @@
 package com.example.lsy_android.mvpmodel.view;
 
-import com.example.lsy_android.mvpmodel.model.entity.City;
+import com.example.lsy_android.mvpmodel.city.bean.City;
 
 import java.util.List;
 

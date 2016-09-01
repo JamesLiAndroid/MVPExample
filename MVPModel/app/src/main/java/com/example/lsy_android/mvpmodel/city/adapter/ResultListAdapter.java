@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.lsy_android.mvpmodel.R;
-import com.example.lsy_android.mvpmodel.model.entity.City;
+import com.example.lsy_android.mvpmodel.city.bean.City;
 
 import java.util.ArrayList;
 
