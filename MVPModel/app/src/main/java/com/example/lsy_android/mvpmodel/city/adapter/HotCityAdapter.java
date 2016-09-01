@@ -1,4 +1,4 @@
-package com.example.lsy_android.mvpmodel.adapter;
+package com.example.lsy_android.mvpmodel.city.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,20 +8,21 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.lsy_android.mvpmodel.R;
+import com.example.lsy_android.mvpmodel.model.entity.City;
 
 import java.util.List;
 
 /**
  * Created by jyj-lsy on 8/31/16 in zsl-tech.
  */
-public class RecentCityAdapter extends BaseAdapter {
+public class HotCityAdapter extends BaseAdapter {
     private Context context;
     private LayoutInflater inflater;
-    private List<String> hotCitys;
+    private List<City> hotCitys;
 
     private ViewHolder viewHolder;
 
-    public RecentCityAdapter(Context context, List<String> hotCitys) {
+    public HotCityAdapter(Context context, List<City> hotCitys) {
         this.context = context;
         inflater = LayoutInflater.from(this.context);
         this.hotCitys = hotCitys;
@@ -52,7 +53,7 @@ public class RecentCityAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        viewHolder.tvCity.setText(hotCitys.get(position));
+        viewHolder.tvCity.setText(hotCitys.get(position).getName());
         return convertView;
     }
 

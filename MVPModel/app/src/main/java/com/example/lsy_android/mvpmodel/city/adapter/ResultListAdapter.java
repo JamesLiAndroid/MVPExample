@@ -1,4 +1,4 @@
-package com.example.lsy_android.mvpmodel.adapter;
+package com.example.lsy_android.mvpmodel.city.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,27 +10,23 @@ import android.widget.TextView;
 import com.example.lsy_android.mvpmodel.R;
 import com.example.lsy_android.mvpmodel.model.entity.City;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
- * Created by jyj-lsy on 8/31/16 in zsl-tech.
+ * Created by jyj-lsy on 8/30/16 in zsl-tech.
  */
-public class HotCityAdapter extends BaseAdapter {
-    private Context context;
+public class ResultListAdapter extends BaseAdapter {
     private LayoutInflater inflater;
-    private List<City> hotCitys;
+    private ArrayList<City> results = new ArrayList<City>();
 
-    private ViewHolder viewHolder;
-
-    public HotCityAdapter(Context context, List<City> hotCitys) {
-        this.context = context;
-        inflater = LayoutInflater.from(this.context);
-        this.hotCitys = hotCitys;
+    public ResultListAdapter(Context context, ArrayList<City> results) {
+        inflater = LayoutInflater.from(context);
+        this.results = results;
     }
 
     @Override
     public int getCount() {
-        return hotCitys.size();
+        return results.size();
     }
 
     @Override
@@ -45,19 +41,20 @@ public class HotCityAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder viewHolder = null;
         if (convertView == null) {
+            convertView = inflater.inflate(R.layout.list_item, null);
             viewHolder = new ViewHolder();
-            convertView = inflater.inflate(R.layout.item_city, null);
-            viewHolder.tvCity = (TextView) convertView.findViewById(R.id.city);
+            viewHolder.name = (TextView) convertView.findViewById(R.id.name);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        viewHolder.tvCity.setText(hotCitys.get(position).getName());
+        viewHolder.name.setText(results.get(position).getName());
         return convertView;
     }
 
-    public class ViewHolder {
-        TextView tvCity;
+    class ViewHolder {
+        TextView name;
     }
 }

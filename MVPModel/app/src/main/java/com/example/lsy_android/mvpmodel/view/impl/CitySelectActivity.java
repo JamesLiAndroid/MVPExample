@@ -23,9 +23,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.lsy_android.mvpmodel.R;
-import com.example.lsy_android.mvpmodel.adapter.HotCityAdapter;
-import com.example.lsy_android.mvpmodel.adapter.RecentCityAdapter;
-import com.example.lsy_android.mvpmodel.adapter.ResultListAdapter;
+import com.example.lsy_android.mvpmodel.city.adapter.HotCityAdapter;
+import com.example.lsy_android.mvpmodel.city.adapter.RecentCityAdapter;
+import com.example.lsy_android.mvpmodel.city.adapter.ResultListAdapter;
 import com.example.lsy_android.mvpmodel.city.utils.DBUtils;
 import com.example.lsy_android.mvpmodel.city.utils.PingYinUtils;
 import com.example.lsy_android.mvpmodel.city.views.MyLetterListView;
@@ -37,11 +37,12 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- *
+ * 城市选择页面
  */
-public class CitySelectActivity extends AppCompatActivity implements AbsListView.OnScrollListener, View.OnClickListener, CitySelectView {
+public class CitySelectActivity extends AppCompatActivity
+        implements AbsListView.OnScrollListener, View.OnClickListener, CitySelectView {
 
-    private BaseAdapter adapter;
+    private ListAdapter adapter;
     private ResultListAdapter resultListAdapter;
     private ListView personList;
     private ListView resultList;
@@ -63,10 +64,7 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
 
     private String currentCity; // 用于保存定位到的城市
     private int locateProcess = 1; // 记录当前定位的状态 正在定位-定位成功-定位失败
-    private boolean isNeedFresh;
-
-    // TODO:使用GreenDao来替换
-    //private DatabaseHelper helper;
+    private boolean mReady;
 
     WindowManager windowManager;
 
@@ -127,7 +125,7 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
         alphaIndexer = new HashMap<String, Integer>();
         handler = new Handler();
         overlayThread = new OverlayThread();
-        isNeedFresh = true;
+        //isNeedFresh = true;
         /**
          * list列表
          */
@@ -217,6 +215,7 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
 
     private void setAdapter(List<City> list, List<City> hotList, List<String> hisCity) {
         adapter = new ListAdapter(this, list, hotList, hisCity);
+        alphaIndexer = adapter.getAlphaIndexerNext();
         personList.setAdapter(adapter);
     }
 
@@ -302,7 +301,10 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
         private List<String> hisCity;
         final int VIEW_TYPE = 5;
 
-        ViewHolder holder;
+        CityViewHolder holder;
+        LocateCityViewHolder locateCityViewHolder;
+        HotCityViewHolder hotCityViewHolder;
+        RecenetCityViewHolder recenetCityViewHolder;
 
         private String[] selfSections; // 存放存在的汉语拼音首字母
         private HashMap<String, Integer> alphaIndexerNext = new HashMap<>();
@@ -367,15 +369,23 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
             final TextView city;
             int viewType = getItemViewType(position);
             if (viewType == 0) { // 定位
-                convertView = inflater.inflate(R.layout.frist_list_item, null);
-                TextView locateHint = (TextView) convertView.findViewById(R.id.locateHint);
-                city = (TextView) convertView.findViewById(R.id.lng_city);
-                city.setOnClickListener(new View.OnClickListener() {
+                if (locateCityViewHolder == null) {
+                    locateCityViewHolder = new LocateCityViewHolder();
+                    convertView = inflater.inflate(R.layout.frist_list_item, null);
+                    locateCityViewHolder.locateHint = (TextView) convertView.findViewById(R.id.locateHint);
+                    locateCityViewHolder.city = (TextView) convertView.findViewById(R.id.lng_city);
+                    locateCityViewHolder.pbLocate = (ProgressBar) convertView.findViewById(R.id.pbLocate);
+                    convertView.setTag(locateCityViewHolder);
+                } else {
+                    locateCityViewHolder = (LocateCityViewHolder) convertView.getTag();
+                }
+                // TODO:后续需要修改为读取定位之后的本地数据
+                locateCityViewHolder.city.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         // 定位成功
                         if (locateProcess == 2) {
-                            resultCity(city.getText().toString());
+                            resultCity(locateCityViewHolder.city.getText().toString());
 
                          /*   if (locationListener != null) {
                                 lm.unRegisterLocationListener(locationListener);
@@ -385,71 +395,75 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
                             locateProcess = 1;
                             personList.setAdapter(adapter);
                             adapter.notifyDataSetChanged();
-                            isNeedFresh = true;
+                           // isNeedFresh = true;
                             currentCity = "";
                           /*  lm = new LocationManager(CitySelcet.this);
                             lm.registerLocationListener(locationListener, false);*/
                         }
                     }
                 });
-                ProgressBar pbLocate = (ProgressBar) convertView.findViewById(R.id.pbLocate);
                 if (locateProcess == 1) { // 正在定位
-                    locateHint.setText("正在定位");
-                    city.setVisibility(View.GONE);
-                    pbLocate.setVisibility(View.VISIBLE);
+                    locateCityViewHolder.locateHint.setText("正在定位");
+                    locateCityViewHolder.city.setVisibility(View.GONE);
+                    locateCityViewHolder.pbLocate.setVisibility(View.VISIBLE);
                 } else if (locateProcess == 2) { // 定位成功
-                    locateHint.setText("当前定位城市");
-                    city.setVisibility(View.VISIBLE);
-                    city.setText(currentCity);
-                    pbLocate.setVisibility(View.GONE);
+                    locateCityViewHolder.locateHint.setText("当前定位城市");
+                    locateCityViewHolder.city.setVisibility(View.VISIBLE);
+                    locateCityViewHolder.city.setText(currentCity);
+                    locateCityViewHolder.pbLocate.setVisibility(View.GONE);
                 } else if (locateProcess == 3) {
-                    locateHint.setText("未定位到城市,请选择");
-                    city.setVisibility(View.VISIBLE);
-                    city.setText("重新选择");
-                    pbLocate.setVisibility(View.GONE);
+                    locateCityViewHolder.locateHint.setText("未定位到城市,请选择");
+                    locateCityViewHolder.city.setVisibility(View.VISIBLE);
+                    locateCityViewHolder.city.setText("重新选择");
+                    locateCityViewHolder.pbLocate.setVisibility(View.GONE);
                 }
             } else if (viewType == 1) { // 最近访问城市
-                convertView = inflater.inflate(R.layout.recent_city, null);
-                GridView rencentCity = (GridView) convertView.findViewById(R.id.recent_city);
-                rencentCity.setAdapter(new RecentCityAdapter(context, this.hisCity));
-                rencentCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                if (recenetCityViewHolder == null) {
+                    recenetCityViewHolder = new RecenetCityViewHolder();
+                    convertView = inflater.inflate(R.layout.recent_city, null);
+                    recenetCityViewHolder.recentCity = (GridView) convertView.findViewById(R.id.recent_city);
+                    convertView.setTag(recenetCityViewHolder);
+                } else {
+                    recenetCityViewHolder = (RecenetCityViewHolder) convertView.getTag();
+                }
+                recenetCityViewHolder.recentCity.setAdapter(new RecentCityAdapter(context, this.hisCity));
+                recenetCityViewHolder.recentCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                         Toast.makeText(getApplicationContext(), city_history.get(position), Toast.LENGTH_SHORT).show();
                         String city = city_history.get(position);
                         resultCity(city);
                     }
 
                 });
-                TextView recentHint = (TextView) convertView.findViewById(R.id.recentHint);
-                recentHint.setText("最近访问的城市");
-            } else if (viewType == 2) {// 热门
-                convertView = inflater.inflate(R.layout.recent_city, null);
-                GridView hotCity = (GridView) convertView.findViewById(R.id.recent_city);
-                hotCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
+            } else if (viewType == 2) { // 热门
+                if (hotCityViewHolder == null) {
+                    hotCityViewHolder = new HotCityViewHolder();
+                    convertView = inflater.inflate(R.layout.recent_city, null);
+                    hotCityViewHolder.hotCity = (GridView) convertView.findViewById(R.id.recent_city);
+                    convertView.setTag(hotCityViewHolder);
+                } else {
+                    hotCityViewHolder = (HotCityViewHolder) convertView.getTag();
+                }
+                hotCityViewHolder.hotCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                         resultCity(city_hot.get(position).getName());
                     }
                 });
-                hotCity.setAdapter(new HotCityAdapter(context, this.hotList));
-                TextView hotHint = (TextView) convertView.findViewById(R.id.recentHint);
-                hotHint.setText("热门城市");
-            } else if (viewType == 3) {
+                hotCityViewHolder.hotCity.setAdapter(new HotCityAdapter(context, this.hotList));
+            } else if (viewType == 3) { // 全部城市的标签
                 convertView = inflater.inflate(R.layout.total_item, null);
-            } else {
+            } else { // 全部城市
                 if (convertView == null) {
                     convertView = inflater.inflate(R.layout.list_item, null);
-                    holder = new ViewHolder();
+                    holder = new CityViewHolder();
                     holder.alpha = (TextView) convertView.findViewById(R.id.alpha);
                     holder.name = (TextView) convertView.findViewById(R.id.name);
                     convertView.setTag(holder);
                 } else {
-                    holder = (ViewHolder) convertView.getTag();
+                    holder = (CityViewHolder) convertView.getTag();
                 }
                 if (position >= 1) {
                     holder.name.setText(list.get(position).getName());
@@ -466,7 +480,21 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
             return convertView;
         }
 
-        private class ViewHolder {
+        private class LocateCityViewHolder {
+            TextView locateHint;
+            TextView city;
+            ProgressBar pbLocate;
+        }
+
+        private class RecenetCityViewHolder {
+            GridView recentCity;
+        }
+
+        private class HotCityViewHolder {
+            GridView hotCity;
+        }
+
+        private class CityViewHolder {
             TextView alpha; // 首字母标题
             TextView name; // 城市名字
         }
@@ -490,9 +518,9 @@ public class CitySelectActivity extends AppCompatActivity implements AbsListView
         super.onStop();
     }
 
-    private boolean mReady;
-
-    // 汉语拼音首字母弹出提示框, 注意windowLeak的问题
+    /**
+     * 汉语拼音首字母弹出提示框, 注意windowLeak的问题
+     */
     private void initOverlay() {
         mReady = true;
         LayoutInflater inflater = LayoutInflater.from(this);
