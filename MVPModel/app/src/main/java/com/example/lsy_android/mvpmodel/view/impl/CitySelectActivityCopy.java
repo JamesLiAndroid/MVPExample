@@ -41,7 +41,7 @@ import java.util.List;
 /**
  * 城市选择页面
  */
-public class CitySelectActivity extends AppCompatActivity
+public class CitySelectActivityCopy extends AppCompatActivity
         implements AbsListView.OnScrollListener, View.OnClickListener, CityViewNormal {
 
     private CityPresenterNormal cityPresenter;
@@ -77,9 +77,10 @@ public class CitySelectActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_city_select);
 
+        initView();
+
         cityPresenter = new CityPresenterNormalImpl(this);
 
-        initView();
         loadCityData();
     }
 
@@ -106,16 +107,7 @@ public class CitySelectActivity extends AppCompatActivity
                     city_result.clear();
                     letterListView.setVisibility(View.GONE);
                     personList.setVisibility(View.GONE);
-                    // cityPresenter.combineSearchedCity(s.toString()); 下面代码等待注释掉
-                    city_result = DBUtils.getInstance().getResultCityList(CitySelectActivity.this, s.toString());
-                    if (city_result.size() <= 0) {
-                        tv_noresult.setVisibility(View.VISIBLE);
-                        resultList.setVisibility(View.GONE);
-                    } else {
-                        tv_noresult.setVisibility(View.GONE);
-                        resultList.setVisibility(View.VISIBLE);
-                        resultListAdapter.notifyDataSetChanged();
-                    }
+                    cityPresenter.combineSearchedCity(s.toString());
                 }
             }
 
@@ -134,6 +126,9 @@ public class CitySelectActivity extends AppCompatActivity
         handler = new Handler();
         overlayThread = new OverlayThread();
         //isNeedFresh = true;
+        /**
+         * list列表
+         */
         personList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
@@ -156,13 +151,12 @@ public class CitySelectActivity extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 resultCity(city_result.get(position).getName());
-
             }
         });
         initOverlay();
         cityInit();
         hotCityInit();
-        city_history = DBUtils.getInstance().hisCityInit(CitySelectActivity.this);
+        city_history = DBUtils.getInstance().hisCityInit(CitySelectActivityCopy.this);
         setAdapter(allCity_lists, city_hot, city_history);
         // -----------定位
         // lm = new LocationManager(this);
@@ -195,7 +189,7 @@ public class CitySelectActivity extends AppCompatActivity
         allCity_lists.add(city);
         city = new City("全部", "3"); // 全部城市
         allCity_lists.add(city);
-        city_lists = DBUtils.getInstance().getCityList(CitySelectActivity.this);
+        city_lists = DBUtils.getInstance().getCityList(CitySelectActivityCopy.this);
         allCity_lists.addAll(city_lists);
     }
 
@@ -258,13 +252,24 @@ public class CitySelectActivity extends AppCompatActivity
 
     @Override
     public void setSearchedCityList(ArrayList<City> searchedCityList) {
-
+        this.city_result = searchedCityList;
+        letterListView.setVisibility(View.GONE);
+        personList.setVisibility(View.GONE);
+        if (city_result.size() <= 0) {
+            tv_noresult.setVisibility(View.VISIBLE);
+            resultList.setVisibility(View.GONE);
+        } else {
+            tv_noresult.setVisibility(View.GONE);
+            resultList.setVisibility(View.VISIBLE);
+            resultListAdapter = new ResultListAdapter(this, city_result);
+            resultList.setAdapter(resultListAdapter);
+            //resultListAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
     public void setHotCityList(ArrayList<City> hotCityList) {
-        this.city_hot = hotCityList;
-        notifyAll();
+
     }
 
     // private LocationManager lm;
@@ -545,7 +550,7 @@ public class CitySelectActivity extends AppCompatActivity
     private void resultCity(String city) {
         Intent in = new Intent();
         in.putExtra("result", city);
-        DBUtils.getInstance().insertCity(CitySelectActivity.this, city);
+        DBUtils.getInstance().insertCity(CitySelectActivityCopy.this, city);
         setResult(RESULT_OK, in);
 
         finish();
@@ -635,7 +640,7 @@ public class CitySelectActivity extends AppCompatActivity
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_back:
-                CitySelectActivity.this.finish();
+                CitySelectActivityCopy.this.finish();
                 break;
             default:
                 break;
