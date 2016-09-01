@@ -16,7 +16,8 @@
         android:gravity="center"
         android:textColor="#8E8D8B"
         android:textSize="30dp"
-        android:visibility="gone" />
+        android:text="A"
+        android:visibility="visible" />
 
     <TextView
         android:id="@+id/name"

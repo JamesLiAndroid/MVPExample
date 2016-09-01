@@ -129,7 +129,7 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
                 break;
             case  R.id.btn_choose_city:
                 // 进入选择城市的页面
-                Intent intent = new Intent(WeatherActivity.this, CitySelectActivityCopy.class);
+                Intent intent = new Intent(WeatherActivity.this, CitySelectActivity.class);
                 startActivityForResult(intent, CHOOSE_CITY);
                 break;
         }

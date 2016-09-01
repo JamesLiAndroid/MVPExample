@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.lsy_android.mvpmodel.R;
+import com.example.lsy_android.mvpmodel.city.bean.City;
 
 import java.util.List;
 
@@ -17,11 +18,11 @@ import java.util.List;
 public class RecentCityAdapter extends BaseAdapter {
     private Context context;
     private LayoutInflater inflater;
-    private List<String> hotCitys;
+    private List<City> hotCitys;
 
     private ViewHolder viewHolder;
 
-    public RecentCityAdapter(Context context, List<String> hotCitys) {
+    public RecentCityAdapter(Context context, List<City> hotCitys) {
         this.context = context;
         inflater = LayoutInflater.from(this.context);
         this.hotCitys = hotCitys;
@@ -52,7 +53,7 @@ public class RecentCityAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        viewHolder.tvCity.setText(hotCitys.get(position));
+        viewHolder.tvCity.setText(hotCitys.get(position).getName());
         return convertView;
     }
 
