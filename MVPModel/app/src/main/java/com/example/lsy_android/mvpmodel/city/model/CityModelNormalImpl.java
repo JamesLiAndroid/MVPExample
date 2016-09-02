@@ -40,17 +40,11 @@ public class CityModelNormalImpl implements CityModelNormal{
         cityHot.add(city);
         city = new City("上海", "2");
         cityHot.add(city);
-        city = new City("深圳", "2");
-        cityHot.add(city);
         city = new City("淄博", "2");
         cityHot.add(city);
         city = new City("临沂", "2");
         cityHot.add(city);
-        city = new City("大庆", "2");
-        cityHot.add(city);
         city = new City("青岛", "2");
-        cityHot.add(city);
-        city = new City("重庆", "2");
         cityHot.add(city);
         return cityHot;
     }

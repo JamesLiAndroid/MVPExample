@@ -44,7 +44,6 @@ public class MyLetterListView extends View {
         for (int i = 0; i < b.length; i++) {
             paint.setColor(Color.parseColor("#11AB63"));
             paint.setTextSize(dip2px(getContext(), 13));
-            ;
             // paint.setTypeface(Typeface.DEFAULT_BOLD);
             paint.setAntiAlias(true);
 			/*
@@ -104,7 +103,7 @@ public class MyLetterListView extends View {
     }
 
     public interface OnTouchingLetterChangedListener {
-        public void onTouchingLetterChanged(String s);
+        void onTouchingLetterChanged(String s);
     }
 
     /**

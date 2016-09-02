@@ -1,4 +1,4 @@
-package com.example.lsy_android.mvpmodel.view.impl;
+package com.example.lsy_android.mvpmodel.city.view;
 
 import android.content.Context;
 import android.content.Intent;
@@ -26,7 +26,6 @@ import com.example.lsy_android.mvpmodel.city.presenter.CityPresenterNormal;
 import com.example.lsy_android.mvpmodel.city.presenter.CityPresenterNormalImpl;
 import com.example.lsy_android.mvpmodel.city.utils.DBUtils;
 import com.example.lsy_android.mvpmodel.city.utils.PingYinUtils;
-import com.example.lsy_android.mvpmodel.city.view.CityViewNormal;
 import com.example.lsy_android.mvpmodel.city.views.MyLetterListView;
 
 import java.util.ArrayList;
@@ -167,8 +166,8 @@ public class CitySelectActivity extends AppCompatActivity
         allCity_lists.add(city);
         city = new City("全部", "3"); // 全部城市
         allCity_lists.add(city);
-        city_lists = DBUtils.getInstance().getCityList(CitySelectActivity.this);
-        allCity_lists.addAll(city_lists);
+        //city_lists = DBUtils.getInstance().getCityList(CitySelectActivity.this);
+        //allCity_lists.addAll(city_lists);
     }
 
     @Override
@@ -184,8 +183,10 @@ public class CitySelectActivity extends AppCompatActivity
     @Override
     public void setAllCityList(ArrayList<City> allCityList) {
         this.city_lists = allCityList;
+        allCity_lists.addAll(city_lists);
         alphaIndexer = initFirstLetter(allCityList);
-        listFullAdapter.addAllList(allCityList);
+        listFullAdapter.addAllList(allCity_lists);
+        listFullAdapter.addAlphaIndexer(alphaIndexer);
         personList.setAdapter(listFullAdapter);
     }
 

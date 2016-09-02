@@ -2,7 +2,6 @@ package com.example.lsy_android.mvpmodel.city.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +31,9 @@ public class CityListFullAdapter extends BaseAdapter {
     private List<City> list = new ArrayList<>();
     private List<City> hotList;
     private List<City> hisCity;
+
+    private HashMap<String, Integer> alphaIndexer;// 存放存在的汉语拼音首字母和与之对应的列表位置
+
     private City currentCity; // 用于保存定位到的城市
     final int VIEW_TYPE = 5;
 
@@ -41,11 +43,15 @@ public class CityListFullAdapter extends BaseAdapter {
     RecenetCityViewHolder recenetCityViewHolder;
 
     private String[] selfSections; // 存放存在的汉语拼音首字母
-    private HashMap<String, Integer> alphaIndexerNext = new HashMap<>();
 
     public CityListFullAdapter(Activity activity) {
         this.activity = activity;
         this.inflater = LayoutInflater.from(activity);
+    }
+
+    public void addAlphaIndexer(HashMap<String, Integer> alphaIndexer) {
+        this.alphaIndexer = alphaIndexer;
+        //notifyDataSetChanged();
     }
 
     public void addAllList(ArrayList<City> allCityList) {
@@ -66,10 +72,6 @@ public class CityListFullAdapter extends BaseAdapter {
     public void addLocationCity(City city) {
         this.currentCity = city;
         //notifyDataSetChanged();
-    }
-
-    public HashMap<String, Integer> getAlphaIndexerNext() {
-        return alphaIndexerNext;
     }
 
     @Override
@@ -183,9 +185,10 @@ public class CityListFullAdapter extends BaseAdapter {
                 } else {
                     holder.alpha.setVisibility(View.GONE);
                 }
-            } else {
-                Log.e("TAG", "position == " + position);
             }
+            // else {
+            //    Log.e("TAG", "position == " + position);
+           // }
         }
         return convertView;
     }
