@@ -121,9 +121,7 @@ public class CitySelectActivity extends AppCompatActivity
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position >= 4) {
-                    resultCity(allCity_lists.get(position + 4).getName());
-                }
+                    resultCity(allCity_lists.get(position).getName());
             }
         });
 
