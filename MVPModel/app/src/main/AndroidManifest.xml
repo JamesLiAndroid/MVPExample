@@ -15,14 +15,13 @@
         <activity android:name=".view.impl.WeatherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".city.view.CitySelectActivity">
-        </activity>
-
-        <activity android:name=".city.view.CityActivity">
-        </activity>
+        <activity android:name=".city.view.CitySelectActivity"></activity>
+        <activity android:name=".city.view.CityActivity"></activity>
+        <activity android:name=".view.impl.WeatherActivityCompact"></activity>
     </application>
 
 </manifest>

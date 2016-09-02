@@ -36,6 +36,7 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
     private AutoCompleteTextView actCityName;
     private Button btnSubmit;
     private Button btnChooseCity;
+    private Button btnTransCard;
     private ProgressBar progressBar;
     private ListView listView;
 
@@ -61,6 +62,7 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
         actCityName = (AutoCompleteTextView) findViewById(R.id.atv_city_name);
         btnSubmit = (Button) findViewById(R.id.btn_submit);
         btnChooseCity = (Button) findViewById(R.id.btn_choose_city);
+        btnTransCard = (Button) findViewById(R.id.btn_trans_card);
         listView = (ListView) findViewById(R.id.listView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         //初始化为不可见
@@ -68,6 +70,7 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
         //设置按钮监听
         btnSubmit.setOnClickListener(this);
         btnChooseCity.setOnClickListener(this);
+        btnTransCard.setOnClickListener(this);
         //设置自动填充文本框内容
         String[] citys = getResources().getStringArray(R.array.city_names);
         ArrayAdapter cityNamesAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, citys);
@@ -132,6 +135,11 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
                 // 进入选择城市的页面
                 Intent intent = new Intent(WeatherActivity.this, CitySelectActivity.class);
                 startActivityForResult(intent, CHOOSE_CITY);
+                break;
+            case R.id.btn_trans_card:
+                // 进入切换Card的列表
+                Intent intentNew = new Intent(WeatherActivity.this, WeatherActivityCompact.class);
+                startActivity(intentNew);
                 break;
         }
     }

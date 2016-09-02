@@ -58,6 +58,14 @@
         android:layout_below="@+id/atv_city_name"
         android:layout_toLeftOf="@+id/btn_submit"
         android:layout_toStartOf="@+id/btn_submit" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="选择城市"
+        android:id="@+id/btn_trans_card"
+        android:layout_below="@+id/atv_city_name"
+        android:layout_toLeftOf="@+id/btn_choose_city"
+        android:layout_toStartOf="@+id/btn_choose_city" />
 
 
 </RelativeLayout>
