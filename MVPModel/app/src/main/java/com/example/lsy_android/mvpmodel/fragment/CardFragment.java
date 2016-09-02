@@ -1,33 +1,45 @@
 package com.example.lsy_android.mvpmodel.fragment;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.lsy_android.mvpmodel.R;
+import com.example.lsy_android.mvpmodel.event.WeatherMessage;
 import com.example.lsy_android.mvpmodel.views.CardAdapter;
 
+import org.greenrobot.eventbus.Subscribe;
 
-public class CardFragment extends Fragment {
+
+public class CardFragment extends BaseFragment {
 
     private CardView mCardView;
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_adapter, container, false);
-        mCardView = (CardView) view.findViewById(R.id.cardView);
-        mCardView.setMaxCardElevation(mCardView.getCardElevation()
-                * CardAdapter.MAX_ELEVATION_FACTOR);
-        return view;
-    }
+    private TextView tvContentGet;
 
     public CardView getCardView() {
         return mCardView;
     }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.fragment_adapter;
+    }
+
+    @Override
+    protected void initView() {
+        mCardView = findView(R.id.cardView);
+        tvContentGet = findView(R.id.tv_content);
+        mCardView.setMaxCardElevation(mCardView.getCardElevation()
+                * CardAdapter.MAX_ELEVATION_FACTOR);
+    }
+
+    @Override
+    protected void initData() {
+
+    }
+
+    @Subscribe(sticky = true)
+    public void onWeatherMsgEarn(WeatherMessage event) {
+        tvContentGet.setText(event.getWeatherInfo());
+    }
+
 }

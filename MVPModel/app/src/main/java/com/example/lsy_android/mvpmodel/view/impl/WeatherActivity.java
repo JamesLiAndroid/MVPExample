@@ -51,8 +51,16 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
 
+       // EventBus.getDefault().register(this);
+
         bindView();
         presenter = new WeatherPresenterImpl(handler, this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+       // EventBus.getDefault().unregister(this);
     }
 
     /**

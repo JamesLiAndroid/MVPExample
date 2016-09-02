@@ -11,18 +11,19 @@ import android.widget.CompoundButton;
 
 import com.example.lsy_android.mvpmodel.R;
 import com.example.lsy_android.mvpmodel.adapter.CardFragmentPagerAdapter;
+import com.example.lsy_android.mvpmodel.event.WeatherMessage;
 import com.example.lsy_android.mvpmodel.views.ShadowTransformer;
+
+import org.greenrobot.eventbus.EventBus;
 
 public class WeatherActivityCompact  extends AppCompatActivity implements View.OnClickListener,
         CompoundButton.OnCheckedChangeListener {
 
     private Button mButton;
     private ViewPager mViewPager;
-    
+
     private CardFragmentPagerAdapter mFragmentCardAdapter;
     private ShadowTransformer mFragmentCardShadowTransformer;
-
-    private boolean mShowingFragments = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,11 +42,26 @@ public class WeatherActivityCompact  extends AppCompatActivity implements View.O
         mViewPager.setAdapter(mFragmentCardAdapter);
         mViewPager.setPageTransformer(false, mFragmentCardShadowTransformer);
         mViewPager.setOffscreenPageLimit(3);
+
+        //EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+       // EventBus.getDefault().post(new WeatherMessage("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"));
+        EventBus.getDefault().postSticky(new WeatherMessage("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"));
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        //EventBus.getDefault().unregister(this);
     }
 
     @Override
     public void onClick(View view) {
-        mButton.setText("Views");
         mViewPager.setAdapter(mFragmentCardAdapter);
         mViewPager.setPageTransformer(false, mFragmentCardShadowTransformer);
     }
