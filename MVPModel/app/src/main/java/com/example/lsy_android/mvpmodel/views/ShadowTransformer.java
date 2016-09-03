@@ -7,18 +7,18 @@ import android.view.View;
 
 public class ShadowTransformer implements ViewPager.OnPageChangeListener, ViewPager.PageTransformer {
 
-    private ViewPager mViewPager;
+   // private ViewPager mViewPager;
     private CardAdapter mAdapter;
     private float mLastOffset;
-    private boolean mScalingEnabled;
+   // private boolean mScalingEnabled;
 
     public ShadowTransformer(ViewPager viewPager, CardAdapter adapter) {
-        mViewPager = viewPager;
+        //mViewPager = viewPager;
         viewPager.addOnPageChangeListener(this);
         mAdapter = adapter;
     }
 
-    public void enableScaling(boolean enable) {
+  /*  public void enableScaling(boolean enable) {
         if (mScalingEnabled && !enable) {
             // shrink main card
             CardView currentCard = mAdapter.getCardViewAt(mViewPager.getCurrentItem());
@@ -36,7 +36,7 @@ public class ShadowTransformer implements ViewPager.OnPageChangeListener, ViewPa
         }
 
         mScalingEnabled = enable;
-    }
+    }*/
 
     @Override
     public void transformPage(View page, float position) {
@@ -74,10 +74,10 @@ public class ShadowTransformer implements ViewPager.OnPageChangeListener, ViewPa
         // This might be null if a fragment is being used
         // and the views weren't created yet
         if (currentCard != null) {
-            if (mScalingEnabled) {
+            /*if (mScalingEnabled) {
                 currentCard.setScaleX((float) (1 + 0.1 * (1 - realOffset)));
                 currentCard.setScaleY((float) (1 + 0.1 * (1 - realOffset)));
-            }
+            }*/
             currentCard.setCardElevation((baseElevation + baseElevation
                     * (CardAdapter.MAX_ELEVATION_FACTOR - 1) * (1 - realOffset)));
         }
@@ -87,10 +87,10 @@ public class ShadowTransformer implements ViewPager.OnPageChangeListener, ViewPa
         // We might be scrolling fast enough so that the next (or previous) card
         // was already destroyed or a fragment might not have been created yet
         if (nextCard != null) {
-            if (mScalingEnabled) {
+            /*if (mScalingEnabled) {
                 nextCard.setScaleX((float) (1 + 0.1 * (realOffset)));
                 nextCard.setScaleY((float) (1 + 0.1 * (realOffset)));
-            }
+            }*/
             nextCard.setCardElevation((baseElevation + baseElevation
                     * (CardAdapter.MAX_ELEVATION_FACTOR - 1) * (realOffset)));
         }

@@ -7,10 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.example.lsy_android.mvpmodel.R;
 import com.example.lsy_android.mvpmodel.adapter.CardFragmentPagerAdapter;
-import com.example.lsy_android.mvpmodel.event.WeatherMessage;
 import com.example.lsy_android.mvpmodel.views.ShadowTransformer;
-
-import org.greenrobot.eventbus.EventBus;
 
 public class WeatherActivityCompact  extends AppCompatActivity{
 
@@ -40,7 +37,7 @@ public class WeatherActivityCompact  extends AppCompatActivity{
     @Override
     protected void onResume() {
         super.onResume();
-        EventBus.getDefault().postSticky(new WeatherMessage("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"));
+       // EventBus.getDefault().postSticky(new WeatherMessage("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"));
     }
 
     @Override

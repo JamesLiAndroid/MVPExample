@@ -12,12 +12,8 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/cardTypeBtn"
-            style="@style/ButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Fragments" />
+        <include layout="@layout/weather_view" />
+
     </LinearLayout>
 
     <android.support.v4.view.ViewPager
