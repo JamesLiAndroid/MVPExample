@@ -1,51 +1,118 @@
+
 package com.example.lsy_android.mvpmodel.model.entity;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class WeatherInfo {
-    private String publishTime;
+
+    @SerializedName("citycode")
+    @Expose
     private String citycode;
-    private String cityname;
-    private List<WeatherInfoForecast> forecast;
+    @SerializedName("publishTime")
+    @Expose
+    private String publishTime;
+    @SerializedName("forecast")
+    @Expose
+    private List<WeatherInfoForecast> forecast = new ArrayList<WeatherInfoForecast>();
+    @SerializedName("currentTemp")
+    @Expose
     private String currentTemp;
+    @SerializedName("cityname")
+    @Expose
+    private String cityname;
 
-    public String getPublishTime() {
-        return this.publishTime;
-    }
-
-    public void setPublishTime(String publishTime) {
-        this.publishTime = publishTime;
-    }
-
+    /**
+     * 
+     * @return
+     *     The citycode
+     */
     public String getCitycode() {
-        return this.citycode;
+        return citycode;
     }
 
+    /**
+     * 
+     * @param citycode
+     *     The citycode
+     */
     public void setCitycode(String citycode) {
         this.citycode = citycode;
     }
 
-    public String getCityname() {
-        return this.cityname;
+    /**
+     * 
+     * @return
+     *     The publishTime
+     */
+    public String getPublishTime() {
+        return publishTime;
     }
 
-    public void setCityname(String cityname) {
-        this.cityname = cityname;
+    /**
+     * 
+     * @param publishTime
+     *     The publishTime
+     */
+    public void setPublishTime(String publishTime) {
+        this.publishTime = publishTime;
     }
 
+    /**
+     * 
+     * @return
+     *     The forecast
+     */
     public List<WeatherInfoForecast> getForecast() {
-        return this.forecast;
+        return forecast;
     }
 
+    /**
+     * 
+     * @param forecast
+     *     The forecast
+     */
     public void setForecast(List<WeatherInfoForecast> forecast) {
         this.forecast = forecast;
     }
 
+    /**
+     * 
+     * @return
+     *     The currentTemp
+     */
     public String getCurrentTemp() {
-        return this.currentTemp;
+        return currentTemp;
     }
 
+    /**
+     * 
+     * @param currentTemp
+     *     The currentTemp
+     */
     public void setCurrentTemp(String currentTemp) {
         this.currentTemp = currentTemp;
     }
+
+    /**
+     * 
+     * @return
+     *     The cityname
+     */
+    public String getCityname() {
+        return cityname;
+    }
+
+    /**
+     * 
+     * @param cityname
+     *     The cityname
+     */
+    public void setCityname(String cityname) {
+        this.cityname = cityname;
+    }
+
 }

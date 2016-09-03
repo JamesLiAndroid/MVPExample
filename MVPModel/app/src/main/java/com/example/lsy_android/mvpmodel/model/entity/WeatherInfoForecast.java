@@ -1,67 +1,157 @@
+
 package com.example.lsy_android.mvpmodel.model.entity;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class WeatherInfoForecast {
-    private String date;
-    private String week;
-    private String fengli;
-    private String fengxiang;
-    private String lowtemp;
-    private String type;
+
+    @SerializedName("hightemp")
+    @Expose
     private String hightemp;
+    @SerializedName("fengxiang")
+    @Expose
+    private String fengxiang;
+    @SerializedName("lowtemp")
+    @Expose
+    private String lowtemp;
+    @SerializedName("fengli")
+    @Expose
+    private String fengli;
+    @SerializedName("date")
+    @Expose
+    private String date;
+    @SerializedName("type")
+    @Expose
+    private String type;
+    @SerializedName("week")
+    @Expose
+    private String week;
 
-    public String getDate() {
-        return this.date;
+    /**
+     * 
+     * @return
+     *     The hightemp
+     */
+    public String getHightemp() {
+        return hightemp;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    /**
+     * 
+     * @param hightemp
+     *     The hightemp
+     */
+    public void setHightemp(String hightemp) {
+        this.hightemp = hightemp;
     }
 
-    public String getWeek() {
-        return this.week;
-    }
-
-    public void setWeek(String week) {
-        this.week = week;
-    }
-
-    public String getFengli() {
-        return this.fengli;
-    }
-
-    public void setFengli(String fengli) {
-        this.fengli = fengli;
-    }
-
+    /**
+     * 
+     * @return
+     *     The fengxiang
+     */
     public String getFengxiang() {
-        return this.fengxiang;
+        return fengxiang;
     }
 
+    /**
+     * 
+     * @param fengxiang
+     *     The fengxiang
+     */
     public void setFengxiang(String fengxiang) {
         this.fengxiang = fengxiang;
     }
 
+    /**
+     * 
+     * @return
+     *     The lowtemp
+     */
     public String getLowtemp() {
-        return this.lowtemp;
+        return lowtemp;
     }
 
+    /**
+     * 
+     * @param lowtemp
+     *     The lowtemp
+     */
     public void setLowtemp(String lowtemp) {
         this.lowtemp = lowtemp;
     }
 
-    public String getType() {
-        return this.type;
+    /**
+     * 
+     * @return
+     *     The fengli
+     */
+    public String getFengli() {
+        return fengli;
     }
 
+    /**
+     * 
+     * @param fengli
+     *     The fengli
+     */
+    public void setFengli(String fengli) {
+        this.fengli = fengli;
+    }
+
+    /**
+     * 
+     * @return
+     *     The date
+     */
+    public String getDate() {
+        return date;
+    }
+
+    /**
+     * 
+     * @param date
+     *     The date
+     */
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    /**
+     * 
+     * @return
+     *     The type
+     */
+    public String getType() {
+        return type;
+    }
+
+    /**
+     * 
+     * @param type
+     *     The type
+     */
     public void setType(String type) {
         this.type = type;
     }
 
-    public String getHightemp() {
-        return this.hightemp;
+    /**
+     * 
+     * @return
+     *     The week
+     */
+    public String getWeek() {
+        return week;
     }
 
-    public void setHightemp(String hightemp) {
-        this.hightemp = hightemp;
+    /**
+     * 
+     * @param week
+     *     The week
+     */
+    public void setWeek(String week) {
+        this.week = week;
     }
+
 }

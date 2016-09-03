@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -111,17 +112,16 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
 
         WeatherInfo weatherInfo = weather.getInfo();
         List<WeatherInfoForecast> forecasts = weatherInfo.getForecast();
-        WeatherInfoForecast forecast = forecasts.get(0);
         //{"地点", "发布日期", "预测日期", "当前温度", "最高温度", "最低温度", "风力", "风向", "大气状况"}
         values[0] = weatherInfo.getCityname();
         values[1] = weatherInfo.getPublishTime();
         values[2] = weatherInfo.getCurrentTemp();
-        values[3] = forecast.getDate();
-        values[4] = forecast.getHightemp();
-        values[5] = forecast.getLowtemp();
-        values[6] = forecast.getFengli();
-        values[7] = forecast.getFengxiang();
-        values[8] = forecast.getType();
+        values[3] = forecasts.get(0).getDate();
+        values[4] = forecasts.get(0).getHightemp();
+        values[5] = forecasts.get(0).getLowtemp();
+        values[6] = forecasts.get(0).getFengli();
+        values[7] = forecasts.get(0).getFengxiang();
+        values[8] = forecasts.get(0).getType();
 
         //通知数据更新
         adapter.notifyDataSetChanged();
@@ -181,6 +181,7 @@ public class WeatherActivity extends AppCompatActivity implements WeatherView, V
                 case 0x123:
                     // 数据更新成功，进行刷新
                     weather = (Weather) msg.obj;
+                    Log.d("TAG", "获取的天气信息为："+weather.toString());
                     activity.setWeatherInfo(weather);
                     break;
                 case 0x000:
