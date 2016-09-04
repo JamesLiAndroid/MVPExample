@@ -50,6 +50,8 @@ public class WeatherModelImpl implements WeatherModel {
             @Override
             public void onFailure(Call<Weather> call, Throwable t) {
                 Log.e("TAG", "onFailure=" + t.getMessage());
+                //数据查询失败
+                litener.onFailure();
             }
         });
     }

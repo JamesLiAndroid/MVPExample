@@ -16,7 +16,7 @@ import org.greenrobot.eventbus.Subscribe;
  * 第四天的天气预报
  * Created by lsy-android on 9/4/16 in zsl-tech.
  */
-public class WeatherForthFragment  extends BaseFragment {
+public class WeatherForthFragment  extends CardFragment {
     ImageView ivWeather;
     TextView tvHighTemp;
     TextView tvLowTemp;
@@ -59,7 +59,7 @@ public class WeatherForthFragment  extends BaseFragment {
     @Subscribe(sticky = true)
     public void onWeatherMsgEarn(WeatherMessage event) {
         Log.d("TAG", "获取的数据为：" + event.toString());
-        if (event.getPosition() == 4) {
+        if (event.getPosition() == 3) {
             // 处理第二天的天气预报
             WeatherInfoForecast forecast = event.getForecast();
             tvHighTemp.setText(forecast.getHightemp());

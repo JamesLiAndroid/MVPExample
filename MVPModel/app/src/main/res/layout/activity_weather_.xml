@@ -5,14 +5,59 @@
     android:fitsSystemWindows="true">
 
     <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_height="35dp"
+        android:layout_gravity="top"
+        >
+
+        <TextView
+            android:id="@+id/tv_city_name"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:textSize="14sp"
+            android:layout_height="match_parent"
+            android:text="当前城市:"
+            android:gravity="center_vertical|left|start"
+            />
+
+        <Button
+            android:id="@+id/btn_choose_city"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:textSize="14sp"
+            android:text="选择城市"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_main_weather"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="55dp"
         android:gravity="center"
         android:orientation="vertical">
 
         <include layout="@layout/weather_view" />
+
+        <RelativeLayout
+            android:id="@+id/rl_pb"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#0fffffff">
+
+            <ProgressBar
+                android:id="@+id/pb_all"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true" />
+        </RelativeLayout>
 
     </LinearLayout>
 
