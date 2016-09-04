@@ -116,9 +116,10 @@ public class WeatherActivityCompact  extends AppCompatActivity implements Weathe
 
         aCache = ACache.get(this);
         city = aCache.getAsString("city");
-        if (city != null || !"".equals(city) || !"null".equals(city)) {
+        if (city != null && !"".equals(city) && !"null".equals(city)) {
             tvCityName.setText("当前城市:" + city);
         } else {
+            // 设置默认城市
             city = "济南";
             tvCityName.setText("当前城市:" + city);
         }
@@ -130,7 +131,10 @@ public class WeatherActivityCompact  extends AppCompatActivity implements Weathe
     @Override
     protected void onResume() {
         super.onResume();
-        EventBus.getDefault().register(this);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+       // EventBus.getDefault().register(this);
        // EventBus.getDefault().postSticky(new WeatherMessage("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"));
     }
 

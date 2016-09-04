@@ -3,7 +3,6 @@ package com.example.lsy_android.mvpmodel.city.utils;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.example.lsy_android.mvpmodel.city.bean.City;
 
@@ -71,7 +70,7 @@ public class DBUtils {
                             + "%\" or pinyin like \"%" + cityName + "%\"",
                     null);
             City city;
-            Log.e("info", "length = " + cursor.getCount());
+            //Log.e("info", "length = " + cursor.getCount());
             while (cursor.moveToNext()) {
                 city = new City(cursor.getString(1), cursor.getString(2));
                 cityList.add(city);
